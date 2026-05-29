@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+*.pkl
+*.joblib
+.venv/
+.idea/
+__pycache__/

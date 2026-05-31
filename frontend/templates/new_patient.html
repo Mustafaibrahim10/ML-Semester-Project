@@ -1,0 +1,266 @@
+{% extends "layout.html" %}
+{% block title %}Add Patient — DiabetesIQ{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Register Patient</h1>
+    <p class="page-subtitle">Enter clinical data for readmission risk assessment</p>
+  </div>
+</div>
+
+<form action="{{ url_for('new_patient') }}" method="POST" class="patient-form" id="patientForm">
+
+  <!-- Patient ID -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <span class="form-section-num">00</span>
+      <div>
+        <h3>Patient Identifier</h3>
+        <p>Unique ID for this patient record</p>
+      </div>
+    </div>
+    <div class="form-grid form-grid--1">
+      <div class="field">
+        <label for="patient_id">Patient ID <span class="required">*</span></label>
+        <input type="text" id="patient_id" name="patient_id" required placeholder="e.g. PT-20240001" class="input"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demographics -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <span class="form-section-num">01</span>
+      <div>
+        <h3>Demographics</h3>
+        <p>Patient background information</p>
+      </div>
+    </div>
+    <div class="form-grid form-grid--3">
+      <div class="field">
+        <label for="race">Race <span class="required">*</span></label>
+        <select id="race" name="race" class="input" required>
+          <option value="">Select…</option>
+          <option value="0">African American</option>
+          <option value="1">Asian</option>
+          <option value="2">Caucasian</option>
+          <option value="3">Hispanic</option>
+          <option value="4">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="gender">Gender <span class="required">*</span></label>
+        <select id="gender" name="gender" class="input" required>
+          <option value="">Select…</option>
+          <option value="0">Female</option>
+          <option value="1">Male</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="Age_group">Age Group <span class="required">*</span></label>
+        <select id="Age_group" name="Age_group" class="input" required>
+          <option value="">Select…</option>
+          <option value="0">[0–10)</option>
+          <option value="1">[10–20)</option>
+          <option value="2">[20–30)</option>
+          <option value="3">[30–40)</option>
+          <option value="4">[40–50)</option>
+          <option value="5">[50–60)</option>
+          <option value="6">[60–70)</option>
+          <option value="7">[70–80)</option>
+          <option value="8">[80–90)</option>
+          <option value="9">[90–100)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admission Info -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <span class="form-section-num">02</span>
+      <div>
+        <h3>Admission Details</h3>
+        <p>Hospital stay and coverage information</p>
+      </div>
+    </div>
+    <div class="form-grid form-grid--3">
+      <div class="field">
+        <label for="time_in_hospital">Time in Hospital (days) <span class="required">*</span></label>
+        <input type="number" id="time_in_hospital" name="time_in_hospital" min="1" max="14" required class="input" placeholder="1–14"/>
+      </div>
+      <div class="field">
+        <label for="payer_code">Payer Code <span class="required">*</span></label>
+        <input type="number" id="payer_code" name="payer_code" min="0" max="13" required class="input" placeholder="0–13"/>
+      </div>
+      <div class="field">
+        <label for="medical_specialty">Medical Specialty <span class="required">*</span></label>
+        <input type="number" id="medical_specialty" name="medical_specialty" min="0" max="48" required class="input" placeholder="0–48"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lab & Procedures -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <span class="form-section-num">03</span>
+      <div>
+        <h3>Lab &amp; Procedures</h3>
+        <p>Clinical procedure counts</p>
+      </div>
+    </div>
+    <div class="form-grid form-grid--3">
+      <div class="field">
+        <label for="num_lab_procedures">Lab Procedures <span class="required">*</span></label>
+        <input type="number" id="num_lab_procedures" name="num_lab_procedures" min="1" max="132" required class="input" placeholder="1–132"/>
+      </div>
+      <div class="field">
+        <label for="num_procedures">Procedures <span class="required">*</span></label>
+        <input type="number" id="num_procedures" name="num_procedures" min="0" max="6" required class="input" placeholder="0–6"/>
+      </div>
+      <div class="field">
+        <label for="num_medications">Medications <span class="required">*</span></label>
+        <input type="number" id="num_medications" name="num_medications" min="1" max="81" required class="input" placeholder="1–81"/>
+      </div>
+      <div class="field">
+        <label for="number_outpatient">Outpatient Visits <span class="required">*</span></label>
+        <input type="number" id="number_outpatient" name="number_outpatient" min="0" max="42" required class="input" placeholder="0–42"/>
+      </div>
+      <div class="field">
+        <label for="number_emergency">Emergency Visits <span class="required">*</span></label>
+        <input type="number" id="number_emergency" name="number_emergency" min="0" max="76" required class="input" placeholder="0–76"/>
+      </div>
+      <div class="field">
+        <label for="number_inpatient">Inpatient Visits <span class="required">*</span></label>
+        <input type="number" id="number_inpatient" name="number_inpatient" min="0" max="21" required class="input" placeholder="0–21"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagnoses -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <span class="form-section-num">04</span>
+      <div>
+        <h3>Diagnoses</h3>
+        <p>Primary, secondary, and tertiary diagnosis categories</p>
+      </div>
+    </div>
+    <div class="form-grid form-grid--2">
+      {% for field, label in [('diag_1','Primary Diagnosis'),('diag_2','Secondary Diagnosis'),('diag_3','Tertiary Diagnosis')] %}
+      <div class="field">
+        <label for="{{ field }}">{{ label }} <span class="required">*</span></label>
+        <select id="{{ field }}" name="{{ field }}" class="input" required>
+          <option value="">Select…</option>
+          <option value="0">Circulatory</option>
+          <option value="1">Respiratory</option>
+          <option value="2">Digestive</option>
+          <option value="3">Diabetes</option>
+          <option value="4">Injury</option>
+          <option value="5">Musculoskeletal</option>
+          <option value="6">Genitourinary</option>
+          <option value="7">Neoplasms</option>
+          <option value="8">Other</option>
+        </select>
+      </div>
+      {% endfor %}
+      <div class="field">
+        <label for="number_diagnoses">Number of Diagnoses <span class="required">*</span></label>
+        <input type="number" id="number_diagnoses" name="number_diagnoses" min="1" max="16" required class="input" placeholder="1–16"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Medications -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <span class="form-section-num">05</span>
+      <div>
+        <h3>Diabetes Medications</h3>
+        <p>0=No, 1=Steady, 2=Up, 3=Down (where applicable)</p>
+      </div>
+    </div>
+
+    <p class="field-group-label">Standard Medications (0–3)</p>
+    <div class="form-grid form-grid--4">
+      {% for med in ['metformin','repaglinide','glimepiride','glipizide','glyburide','pioglitazone','rosiglitazone','insulin'] %}
+      <div class="field">
+        <label for="{{ med }}">{{ med|capitalize }} <span class="required">*</span></label>
+        <select id="{{ med }}" name="{{ med }}" class="input" required>
+          <option value="">—</option>
+          <option value="0">0 – No</option>
+          <option value="1">1 – Steady</option>
+          <option value="2">2 – Up</option>
+          <option value="3">3 – Down</option>
+        </select>
+      </div>
+      {% endfor %}
+    </div>
+
+    <p class="field-group-label" style="margin-top:1.2rem;">Binary Medications (0=No, 1=Yes)</p>
+    <div class="form-grid form-grid--4">
+      {% for med in ['nateglinide','chlorpropamide','acetohexamide','tolbutamide','acarbose','miglitol','troglitazone','tolazamide'] %}
+      <div class="field">
+        <label for="{{ med }}">{{ med|capitalize }} <span class="required">*</span></label>
+        <select id="{{ med }}" name="{{ med }}" class="input" required>
+          <option value="">—</option>
+          <option value="0">0 – No</option>
+          <option value="1">1 – Yes</option>
+        </select>
+      </div>
+      {% endfor %}
+    </div>
+
+    <p class="field-group-label" style="margin-top:1.2rem;">Combination Medications (0=No, 1=Yes)</p>
+    <div class="form-grid form-grid--4">
+      {% for med, name in [('glyburide_metformin','Glyburide-Metformin'),('glipizide_metformin','Glipizide-Metformin'),('glimepiride_pioglitazone','Glimepiride-Pioglitazone'),('metformin_rosiglitazone','Metformin-Rosiglitazone'),('metformin_pioglitazone','Metformin-Pioglitazone')] %}
+      <div class="field">
+        <label for="{{ med }}">{{ name }} <span class="required">*</span></label>
+        <select id="{{ med }}" name="{{ med }}" class="input" required>
+          <option value="">—</option>
+          <option value="0">0 – No</option>
+          <option value="1">1 – Yes</option>
+        </select>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Medication change & diabetesMed -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <span class="form-section-num">06</span>
+      <div>
+        <h3>Medication Change &amp; Diabetes Flag</h3>
+      </div>
+    </div>
+    <div class="form-grid form-grid--2">
+      <div class="field">
+        <label for="change">Medication Change <span class="required">*</span></label>
+        <select id="change" name="change" class="input" required>
+          <option value="">Select…</option>
+          <option value="0">0 – No change</option>
+          <option value="1">1 – Changed</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="diabetesMed">Diabetes Medication <span class="required">*</span></label>
+        <select id="diabetesMed" name="diabetesMed" class="input" required>
+          <option value="">Select…</option>
+          <option value="0">0 – No</option>
+          <option value="1">1 – Yes</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <a href="{{ url_for('dashboard') }}" class="btn btn--ghost">Cancel</a>
+    <button type="submit" class="btn btn--primary">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Save Patient
+    </button>
+  </div>
+</form>
+{% endblock %}

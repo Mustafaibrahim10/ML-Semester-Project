@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+{% block title %}Patient {{ patient.patient_id }} — DiabetesIQ{% endblock %}
+
+{% block content %}
+{% set RACE = {0:'African American',1:'Asian',2:'Caucasian',3:'Hispanic',4:'Other'} %}
+{% set GENDER = {0:'Female',1:'Male'} %}
+{% set DIAG = {0:'Circulatory',1:'Respiratory',2:'Digestive',3:'Diabetes',4:'Injury',5:'Musculoskeletal',6:'Genitourinary',7:'Neoplasms',8:'Other'} %}
+{% set AGE = {0:'[0–10)',1:'[10–20)',2:'[20–30)',3:'[30–40)',4:'[40–50)',5:'[50–60)',6:'[60–70)',7:'[70–80)',8:'[80–90)',9:'[90–100)'} %}
+{% set MED3 = {0:'No',1:'Steady',2:'Up',3:'Down'} %}
+{% set BIN = {0:'No',1:'Yes'} %}
+
+<div class="page-header">
+  <div>
+    <p class="breadcrumb"><a href="{{ url_for('lookup') }}">Lookup</a> / {{ patient.patient_id }}</p>
+    <h1 class="page-title">{{ patient.patient_id }}</h1>
+    <p class="page-subtitle">Patient clinical record</p>
+  </div>
+  <div class="header-actions">
+    <a href="{{ url_for('edit_patient', patient_id=patient.patient_id) }}" class="btn btn--ghost">Edit</a>
+    <form action="{{ url_for('predict', patient_id=patient.patient_id) }}" method="POST" style="display:inline">
+      <button type="submit" class="btn btn--primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 3l8 5-8 5V3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        Run Prediction
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Summary row -->
+<div class="detail-summary">
+  <div class="ds-item">
+    <p class="ds-label">Race</p>
+    <p class="ds-value">{{ RACE.get(patient.race, patient.race) }}</p>
+  </div>
+  <div class="ds-item">
+    <p class="ds-label">Gender</p>
+    <p class="ds-value">{{ GENDER.get(patient.gender, patient.gender) }}</p>
+  </div>
+  <div class="ds-item">
+    <p class="ds-label">Age Group</p>
+    <p class="ds-value">{{ AGE.get(patient.Age_group, patient.Age_group) }}</p>
+  </div>
+  <div class="ds-item">
+    <p class="ds-label">Days in Hospital</p>
+    <p class="ds-value">{{ patient.time_in_hospital }}</p>
+  </div>
+  <div class="ds-item">
+    <p class="ds-label">Diagnoses Count</p>
+    <p class="ds-value">{{ patient.number_diagnoses }}</p>
+  </div>
+</div>
+
+<div class="detail-grid">
+  <!-- Diagnoses -->
+  <div class="detail-card">
+    <h3 class="detail-card-title">Diagnoses</h3>
+    <div class="kv-list">
+      <div class="kv-row"><span>Primary (diag_1)</span><strong>{{ DIAG.get(patient.diag_1, patient.diag_1) }}</strong></div>
+      <div class="kv-row"><span>Secondary (diag_2)</span><strong>{{ DIAG.get(patient.diag_2, patient.diag_2) }}</strong></div>
+      <div class="kv-row"><span>Tertiary (diag_3)</span><strong>{{ DIAG.get(patient.diag_3, patient.diag_3) }}</strong></div>
+      <div class="kv-row"><span>Total diagnoses</span><strong>{{ patient.number_diagnoses }}</strong></div>
+    </div>
+  </div>
+
+  <!-- Visits & Procedures -->
+  <div class="detail-card">
+    <h3 class="detail-card-title">Visits &amp; Procedures</h3>
+    <div class="kv-list">
+      <div class="kv-row"><span>Lab procedures</span><strong>{{ patient.num_lab_procedures }}</strong></div>
+      <div class="kv-row"><span>Procedures</span><strong>{{ patient.num_procedures }}</strong></div>
+      <div class="kv-row"><span>Medications</span><strong>{{ patient.num_medications }}</strong></div>
+      <div class="kv-row"><span>Outpatient visits</span><strong>{{ patient.number_outpatient }}</strong></div>
+      <div class="kv-row"><span>Emergency visits</span><strong>{{ patient.number_emergency }}</strong></div>
+      <div class="kv-row"><span>Inpatient visits</span><strong>{{ patient.number_inpatient }}</strong></div>
+    </div>
+  </div>
+
+  <!-- Standard Medications -->
+  <div class="detail-card detail-card--wide">
+    <h3 class="detail-card-title">Medications</h3>
+    <div class="med-grid">
+      {% for med in ['metformin','repaglinide','glimepiride','glipizide','glyburide','pioglitazone','rosiglitazone','insulin'] %}
+      <div class="med-chip {% if patient[med] > 0 %}med-chip--active{% endif %}">
+        <span class="med-name">{{ med }}</span>
+        <span class="med-val">{{ MED3.get(patient[med], patient[med]) }}</span>
+      </div>
+      {% endfor %}
+      {% for med in ['nateglinide','chlorpropamide','acetohexamide','tolbutamide','acarbose','miglitol','troglitazone','tolazamide'] %}
+      <div class="med-chip {% if patient[med] > 0 %}med-chip--active{% endif %}">
+        <span class="med-name">{{ med }}</span>
+        <span class="med-val">{{ BIN.get(patient[med], patient[med]) }}</span>
+      </div>
+      {% endfor %}
+      {% set combos = [('glyburide_metformin','Glybur-Met'),('glipizide_metformin','Glipiz-Met'),('glimepiride_pioglitazone','Glim-Pio'),('metformin_rosiglitazone','Met-Rosi'),('metformin_pioglitazone','Met-Pio')] %}
+      {% for field, label in combos %}
+      <div class="med-chip {% if patient[field] > 0 %}med-chip--active{% endif %}">
+        <span class="med-name">{{ label }}</span>
+        <span class="med-val">{{ BIN.get(patient[field], patient[field]) }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Other flags -->
+  <div class="detail-card">
+    <h3 class="detail-card-title">Other Flags</h3>
+    <div class="kv-list">
+      <div class="kv-row"><span>Medication change</span><strong>{{ 'Changed' if patient.change == 1 else 'No change' }}</strong></div>
+      <div class="kv-row"><span>Diabetes medication</span><strong>{{ 'Yes' if patient.diabetesMed == 1 else 'No' }}</strong></div>
+      <div class="kv-row"><span>Payer code</span><strong>{{ patient.payer_code }}</strong></div>
+      <div class="kv-row"><span>Medical specialty</span><strong>{{ patient.medical_specialty }}</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- Danger zone -->
+<div class="danger-zone">
+  <p class="danger-label">Danger Zone</p>
+  <p class="danger-desc">Permanently delete this patient and all associated predictions.</p>
+  <form action="{{ url_for('delete_patient', patient_id=patient.patient_id) }}" method="POST"
+        onsubmit="return confirm('Delete patient {{ patient.patient_id }}? This cannot be undone.')">
+    <button type="submit" class="btn btn--danger">Delete Patient</button>
+  </form>
+</div>
+{% endblock %}

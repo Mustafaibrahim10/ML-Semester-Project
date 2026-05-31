@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Lookup Patient — DiabetesIQ{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Patient Lookup</h1>
+    <p class="page-subtitle">Search by patient ID to manage records or run predictions</p>
+  </div>
+</div>
+
+<div class="lookup-card">
+  <div class="lookup-icon">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <circle cx="22" cy="22" r="14" stroke="var(--accent)" stroke-width="1.5"/>
+      <path d="M32 32L42 42" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="22" cy="18" r="4" stroke="var(--accent)" stroke-width="1.2"/>
+      <path d="M14 30c0-4.418 3.582-7 8-7s8 2.582 8 7" stroke="var(--accent)" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <h2>Find a Patient</h2>
+  <p>Enter the exact patient ID to retrieve their clinical record.</p>
+
+  <form action="{{ url_for('lookup_search') }}" method="GET" class="lookup-form">
+    <div class="lookup-input-wrap">
+      <input type="text" name="patient_id" placeholder="Enter Patient ID…" class="input lookup-input" autofocus required/>
+      <button type="submit" class="btn btn--primary">Search</button>
+    </div>
+  </form>
+</div>
+
+<div class="hint-box">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2"/><path d="M8 7v5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="5" r="0.8" fill="currentColor"/></svg>
+  <p>Patient IDs are case-sensitive. They are assigned when the patient is first registered.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}DiabetesIQ{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent)" stroke-width="1.5"/>
+          <path d="M14 7v7l5 3" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="14" cy="14" r="2" fill="var(--accent)"/>
+        </svg>
+      </div>
+      <span class="brand-name">DiabetesIQ</span>
+    </div>
+
+    <div class="nav-section">
+      <p class="nav-label">Navigation</p>
+      <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/></svg>
+        Dashboard
+      </a>
+      <a href="{{ url_for('new_patient') }}" class="nav-link {% if request.endpoint == 'new_patient' %}active{% endif %}">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M2 14c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12 2v4M10 4h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Add Patient
+      </a>
+      <a href="{{ url_for('lookup') }}" class="nav-link {% if request.endpoint in ['lookup', 'lookup_search', 'patient_detail', 'edit_patient'] %}active{% endif %}">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Lookup Patient
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="api-status" id="apiStatus">
+        <span class="status-dot"></span>
+        <span class="status-text">Checking API...</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="main">
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for cat, msg in messages %}
+            <div class="flash flash--{{ cat }}">
+              <span>{{ msg }}</span>
+              <button onclick="this.parentElement.remove()" class="flash-close">&times;</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+{% block title %}Prediction — {{ patient_id }} — DiabetesIQ{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <p class="breadcrumb"><a href="{{ url_for('patient_detail', patient_id=patient_id) }}">{{ patient_id }}</a> / Prediction</p>
+    <h1 class="page-title">Prediction Result</h1>
+  </div>
+  <a href="{{ url_for('patient_detail', patient_id=patient_id) }}" class="btn btn--ghost">← Back to Patient</a>
+</div>
+
+<!-- Main verdict -->
+<div class="verdict-card {% if result.prediction == 1 %}verdict-card--danger{% else %}verdict-card--safe{% endif %}">
+  <div class="verdict-icon">
+    {% if result.prediction == 1 %}
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="2"/>
+      <path d="M24 14v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="24" cy="34" r="1.5" fill="currentColor"/>
+    </svg>
+    {% else %}
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="2"/>
+      <path d="M14 24l8 8 12-14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    {% endif %}
+  </div>
+  <div class="verdict-content">
+    <p class="verdict-label">Prediction</p>
+    <h2 class="verdict-title">{{ result.prediction_label }}</h2>
+    <p class="verdict-sub">Patient ID: <strong>{{ result.patient_id }}</strong></p>
+  </div>
+  <div class="verdict-confidence">
+    <p class="vc-label">Confidence</p>
+    <p class="vc-value">{{ (result.confidence * 100) | round(1) }}%</p>
+  </div>
+</div>
+
+<!-- Probability bars -->
+<div class="prob-section">
+  <h2 class="section-title">Class Probabilities</h2>
+  <div class="prob-grid">
+    <div class="prob-bar-card">
+      <div class="prob-bar-header">
+        <span>Not Readmitted</span>
+        <strong>{{ (result.probability_not_readmitted * 100) | round(1) }}%</strong>
+      </div>
+      <div class="prob-bar-track">
+        <div class="prob-bar-fill prob-bar-fill--safe" style="width: {{ (result.probability_not_readmitted * 100) | round(1) }}%"></div>
+      </div>
+    </div>
+    <div class="prob-bar-card">
+      <div class="prob-bar-header">
+        <span>Readmitted within 30 days</span>
+        <strong>{{ (result.probability_readmitted * 100) | round(1) }}%</strong>
+      </div>
+      <div class="prob-bar-track">
+        <div class="prob-bar-fill prob-bar-fill--danger" style="width: {{ (result.probability_readmitted * 100) | round(1) }}%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feature breakdown -->
+<div class="section-header" style="margin-top:2rem;">
+  <h2 class="section-title">Features Used</h2>
+  <span class="badge">39 features</span>
+</div>
+
+<div class="features-table-wrap">
+  <table class="features-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for k, v in result.features_used.items() %}
+      <tr>
+        <td class="feat-name">{{ k }}</td>
+        <td class="feat-val"><span class="feat-pill">{{ v }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="result-actions">
+  <form action="{{ url_for('predict', patient_id=patient_id) }}" method="POST">
+    <button type="submit" class="btn btn--ghost">Re-run Prediction</button>
+  </form>
+  <a href="{{ url_for('patient_detail', patient_id=patient_id) }}" class="btn btn--primary">Back to Patient</a>
+</div>
+{% endblock %}

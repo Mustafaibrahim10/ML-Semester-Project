@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard — DiabetesIQ{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Diabetes readmission prediction system</p>
+  </div>
+  <a href="{{ url_for('new_patient') }}" class="btn btn--primary">+ Add Patient</a>
+</div>
+
+<!-- Hero stats -->
+<div class="stats-grid">
+  <div class="stat-card stat-card--accent">
+    <div class="stat-icon">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M3 20c0-4.418 3.582-7 8-7s8 2.582 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <p class="stat-label">Total Patients</p>
+    <p class="stat-value" id="statPatients">999+</p>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3v16M3 11h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="11" cy="11" r="9" stroke="currentColor" stroke-width="1.5"/></svg>
+    </div>
+    <p class="stat-label">Predictions Run</p>
+    <p class="stat-value" id="statPreds">999+</p>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 16l4-4 4 4 6-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <p class="stat-label">Model</p>
+    <p class="stat-value" style="font-size:1.1rem;">Random Forest</p>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2L13.09 8.26L20 9.27L15 14.14L16.18 21.02L11 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L11 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <p class="stat-label">Features</p>
+    <p class="stat-value">39</p>
+  </div>
+</div>
+
+<!-- Quick actions -->
+<div class="section-header">
+  <h2 class="section-title">Quick Actions</h2>
+</div>
+
+<div class="action-grid">
+  <a href="{{ url_for('new_patient') }}" class="action-card">
+    <div class="action-icon action-icon--blue">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4.418 3.582-7 8-7s8 2.582 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M19 3v6M16 6h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="action-content">
+      <h3>Register New Patient</h3>
+      <p>Add a patient record with 39 clinical features for prediction</p>
+    </div>
+    <svg class="action-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+
+  <a href="{{ url_for('lookup') }}" class="action-card">
+    <div class="action-icon action-icon--green">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M16 16L20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="action-content">
+      <h3>Look Up Patient</h3>
+      <p>Search by patient ID to view records, edit, or run predictions</p>
+    </div>
+    <svg class="action-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+</div>
+
+<!-- How it works -->
+<div class="section-header" style="margin-top:2.5rem;">
+  <h2 class="section-title">How it works</h2>
+</div>
+
+<div class="flow-steps">
+  <div class="flow-step">
+    <div class="step-num">01</div>
+    <div class="step-content">
+      <h4>Register Patient</h4>
+      <p>Enter patient demographics, lab values, medications, and diagnoses across 39 features.</p>
+    </div>
+  </div>
+  <div class="flow-connector"></div>
+  <div class="flow-step">
+    <div class="step-num">02</div>
+    <div class="step-content">
+      <h4>Run Prediction</h4>
+      <p>The Random Forest model processes scaled features and returns a readmission probability.</p>
+    </div>
+  </div>
+  <div class="flow-connector"></div>
+  <div class="flow-step">
+    <div class="step-num">03</div>
+    <div class="step-content">
+      <h4>Review Results</h4>
+      <p>Interpret the confidence score and class probabilities to support clinical decisions.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
